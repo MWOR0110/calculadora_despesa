@@ -4,17 +4,15 @@ import './App.css'; // Importando o estilo do componente
 
 // Definindo o componente funcional App
 const App = () => {
-  // Definindo os estados iniciais utilizando hooks do React
-  const [nome, setNome] = useState(''); // Estado para o nome
-  const [valor, setValor] = useState(''); // Estado para o valor
-  const [tipo, setTipo] = useState('Pagamento'); // Estado para o tipo (Despesa ou Pagamento)
-  const [pagoPor, setPagoPor] = useState(''); // Estad  o para quem pagou
-  const [despesas, setDespesas] = useState([]); // Estado para armazenar as despesas
-  const [pagamentos, setPagamentos] = useState([]); // Estado para armazenar os pagamentos
-  const [totalDespesas, setTotalDespesas] = useState(0); // Estado para o total de despesas
-  const [totalPagamentos, setTotalPagamentos] = useState(0); // Estado para o total de pagamentos
+  const [nome, setNome] = useState('');
+  const [valor, setValor] = useState('');
+  const [tipo, setTipo] = useState('Pagamento');
+  const [pagoPor, setPagoPor] = useState('');
+  const [despesas, setDespesas] = useState([]);
+  const [pagamentos, setPagamentos] = useState([]);
+  const [totalDespesas, setTotalDespesas] = useState(0);
+  const [totalPagamentos, setTotalPagamentos] = useState(0);
 
-  // Hook useEffect para carregar os dados do Local Storage ao carregar a página
   useEffect(() => {
     const savedDespesas = JSON.parse(localStorage.getItem('despesas')) || [];
     const savedPagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
@@ -23,18 +21,15 @@ const App = () => {
     setPagamentos(savedPagamentos);
   }, []);
 
-  // Hook useEffect para atualizar o Local Storage sempre que houver mudanças em despesas ou pagamentos
   useEffect(() => {
     localStorage.setItem('despesas', JSON.stringify(despesas));
     localStorage.setItem('pagamentos', JSON.stringify(pagamentos));
 
-    // Função para calcular o total de despesas
     const calcularTotalDespesas = () => {
       const total = despesas.reduce((acc, despesa) => acc + parseFloat(despesa.valor), 0);
       setTotalDespesas(total);
     };
 
-    // Função para calcular o total de pagamentos
     const calcularTotalPagamentos = () => {
       const total = pagamentos.reduce((acc, pagamento) => acc + parseFloat(pagamento.valor), 0);
       setTotalPagamentos(total);
@@ -44,44 +39,57 @@ const App = () => {
     calcularTotalPagamentos();
   }, [despesas, pagamentos]);
 
-  // Função para lidar com o envio do formulário
   const handleSubmit = (event) => {
     event.preventDefault();
-    const novoItem = { nome, valor, tipo, pagoPor };
+    const novoItem = { nome, valor, tipo, pagoPor, concluido: false };
     if (tipo === 'Despesa') {
-      setDespesas([...despesas, novoItem]);
+      const updatedDespesas = [...despesas, novoItem];
+      setDespesas(updatedDespesas);
+      localStorage.setItem('despesas', JSON.stringify(updatedDespesas)); // Armazena no localStorage
     } else {
-      setPagamentos([...pagamentos, novoItem]);
+      const updatedPagamentos = [...pagamentos, novoItem];
+      setPagamentos(updatedPagamentos);
+      localStorage.setItem('pagamentos', JSON.stringify(updatedPagamentos)); // Armazena no localStorage
     }
     setNome('');
     setValor('');
     setPagoPor('');
   };
 
-  // Função para lidar com a exclusão de um item (despesa ou pagamento)
   const handleDelete = (index, tipo) => {
     if (tipo === 'Despesa') {
-      const novasDespesas = [...despesas];
-      novasDespesas.splice(index, 1);
-      setDespesas(novasDespesas);
+      const updatedDespesas = [...despesas];
+      updatedDespesas.splice(index, 1);
+      setDespesas(updatedDespesas);
+      localStorage.setItem('despesas', JSON.stringify(updatedDespesas)); // Armazena no localStorage
     } else {
-      const novosPagamentos = [...pagamentos];
-      novosPagamentos.splice(index, 1);
-      setPagamentos(novosPagamentos);
+      const updatedPagamentos = [...pagamentos];
+      updatedPagamentos.splice(index, 1);
+      setPagamentos(updatedPagamentos);
+      localStorage.setItem('pagamentos', JSON.stringify(updatedPagamentos)); // Armazena no localStorage
     }
   };
 
-  // Obtendo a última despesa e último pagamento, se existirem
-  const ultimaDespesa = despesas.length > 0 ? despesas[despesas.length - 1] : null;
-  const ultimoPagamento = pagamentos.length > 0 ? pagamentos[pagamentos.length - 1] : null;
+  const handleToggle = (index, tipo) => {
+    if (tipo === 'Despesa') {
+      const updatedDespesas = [...despesas];
+      updatedDespesas[index].concluido = !updatedDespesas[index].concluido;
+      setDespesas(updatedDespesas);
+      localStorage.setItem('despesas', JSON.stringify(updatedDespesas)); // Armazena no localStorage
+    } else {
+      const updatedPagamentos = [...pagamentos];
+      updatedPagamentos[index].concluido = !updatedPagamentos[index].concluido;
+      setPagamentos(updatedPagamentos);
+      localStorage.setItem('pagamentos', JSON.stringify(updatedPagamentos)); // Armazena no localStorage
+    }
+  };
 
-  // Retornando o JSX do componente
+
   return (
     <div className="container">
       <div className="sidebar">
         <h2 className="sidebar-title">Calculadora de Receita e Despesas</h2>
         <form onSubmit={handleSubmit}>
-          {/* Formulário para adicionar uma despesa ou pagamento */}
           <label>
             Nome:
             <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
@@ -104,7 +112,6 @@ const App = () => {
           <button type="submit">Cadastrar</button>
         </form>
 
-        {/* Tabela com informações sobre despesas, pagamentos e saldo */}
         <h3>Saldo Total</h3>
         <table className="info-table">
           <tbody>
@@ -128,7 +135,6 @@ const App = () => {
         </table>
       </div>
       <div className="content">
-        {/* Tabela de Despesas */}
         <div className="table-wrapper">
           <h2 className="table-title">Despesas</h2>
           <table>
@@ -137,6 +143,7 @@ const App = () => {
                 <th></th>
                 <th>Valor</th>
                 <th>Pago Por</th>
+                <th>Status</th>
                 <th>Excluir</th>
               </tr>
             </thead>
@@ -147,18 +154,25 @@ const App = () => {
                   <td>{despesa.valor}</td>
                   <td>{despesa.pagoPor}</td>
                   <td>
+                    <input
+                      type="checkbox"
+                      checked={despesa.concluido}
+                      onChange={() => handleToggle(index, 'Despesa')}
+                    />
+                    {despesa.concluido ? 'Concluído' : 'Pendente'}
+                  </td>
+                  <td>
                     <button onClick={() => handleDelete(index, 'Despesa')}>Excluir</button>
                   </td>
                 </tr>
               ))}
               <tr>
-                <td colSpan="4">Total: {totalDespesas.toFixed(2)}</td>
+                <td colSpan="5">Total: {totalDespesas.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        {/* Tabela de Pagamentos */}
         <div className="table-wrapper">
           <h2 className="table-title">Pagamentos</h2>
           <table>
@@ -167,6 +181,7 @@ const App = () => {
                 <th></th>
                 <th>Valor</th>
                 <th>Pago Por</th>
+                <th>Status</th>
                 <th>Excluir</th>
               </tr>
             </thead>
@@ -177,12 +192,20 @@ const App = () => {
                   <td>{pagamento.valor}</td>
                   <td>{pagamento.pagoPor}</td>
                   <td>
+                    <input
+                      type="checkbox"
+                      checked={pagamento.concluido}
+                      onChange={() => handleToggle(index, 'Pagamento')}
+                    />
+                    {pagamento.concluido ? 'Concluído' : 'Pendente'}
+                  </td>
+                  <td>
                     <button onClick={() => handleDelete(index, 'Pagamento')}>Excluir</button>
                   </td>
                 </tr>
               ))}
               <tr>
-                <td colSpan="4">Total: {totalPagamentos.toFixed(2)}</td>
+                <td colSpan="5">Total: {totalPagamentos.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
@@ -192,4 +215,4 @@ const App = () => {
   );
 };
 
-export default App; // Exportando o componente App
+export default App;
