@@ -1,39 +1,36 @@
-
 # Calculadora de Receita e Despesas
 
-Esta é uma aplicação simples para controlar receitas e despesas. Permite adicionar despesas e pagamentos, exibindo o saldo total e o status atual.
+Este é um aplicativo simples para calcular receitas e despesas, permitindo que você adicione despesas e pagamentos e acompanhe o saldo total.
 
 ## Funcionalidades
 
-- Adicionar despesas ou pagamentos com nome, valor e pessoa responsável.
-- Excluir despesas ou pagamentos da lista.
-- Exibe o saldo total, despesas totais, pagamentos totais e status (em dia ou devendo).
+- Adição de despesas e pagamentos com nome, valor, tipo (Despesa ou Pagamento) e quem pagou.
+- Exclusão de despesas e pagamentos.
+- Visualização do saldo total, status de estar "Em dia" ou "Devendo".
 
-## Como Executar
+## Tecnologias Utilizadas
 
-1. Certifique-se de ter o Node.js instalado.
-2. Clone o repositório.
-3. No diretório do projeto, execute `npm install` para instalar as dependências.
-4. Execute `npm start` para iniciar o aplicativo.
+- React para a construção da interface do usuário.
+- Local Storage para persistência de dados entre as sessões.
+
+## Instruções de Uso
+
+1. **Clonagem do Repositório:** Clone o repositório para o seu ambiente local usando `git clone`.
+2. **Instalação de Dependências:** Utilize `npm install` para instalar todas as dependências necessárias.
+3. **Execução do Aplicativo:** Inicie o aplicativo localmente com `npm start`.
+4. **Adição de Despesas e Pagamentos:** Utilize o formulário fornecido para adicionar novas despesas e pagamentos e acompanhar o saldo.
+
+Certifique-se de ter o Node.js instalado para executar as instruções acima.
 
 ## Estrutura do Projeto
 
-- `src/`
-  - `App.js`: O componente principal da aplicação.
-  - `Table.js`: Componente reutilizável para exibir tabelas de despesas e pagamentos.
-  - `App.css`: Estilos da aplicação.
-
-## Como Usar
-
-- Preencha os campos na barra lateral para adicionar uma nova despesa ou pagamento.
-- Clique no botão "Cadastrar" para adicionar o item à lista.
-- Para excluir um item, clique no botão "Excluir" na tabela correspondente.
+- `App.js`: Contém o código principal do aplicativo.
+- `App.css`: Estilos para o aplicativo.
+- `README.md`: Este arquivo.
 
 ## Contribuição
 
-Contribuições são bem-vindas! Se encontrar algum problema ou tiver sugestões, fique à vontade para abrir uma issue ou criar um pull request.
+Contribuições são bem-vindas! Se encontrar algum problema ou tiver sugestões, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
 
-## Licença
-
-Este projeto está licenciado sob a [Licença XYZ](link-da-licenca).
+## Ta entregue Prof Gabriel mestre de IA
